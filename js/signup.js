@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     form.addEventListener('submit', function(evt) {
-        evt.preventDefault();
         var valid = validateFields();
         if (!valid && evt.preventDefault) {
             evt.preventDefault();
@@ -43,50 +42,68 @@ document.addEventListener('DOMContentLoaded', function() {
 function validateFields() {
     var form = document.getElementById("signup");
     var simpleFields = [form.elements['firstName'], form.elements['lastName'], form.elements['address1'], form.elements['city']];
-    var regEx = /^[a-zA-z0-9]+$/;
+    var regEx = new RegExp("^[a-zA-Z0-9]");
     var formIsGood = true;
+    //figures out if the basic text input fields are ok
     for (var i = 0; i < simpleFields.length; i++) {
-        console.log(simpleFields[i]);
-        if (!regEx.exec(simpleFields[i].value)) {
+        if (!regEx.test(simpleFields[i].value)) {
             simpleFields[i].className = "form-control invalid-field";
             formIsGood = false;
+        } else {
+            simpleFields[i].className = "form-control";
+
         }
     }
-    console.log("simples" + formIsGood);
-    if (regEx.exec(form["occupationOther"].value) || form.elements["occupation"].value !== "other") {
+    //figures out if the selectors are ok
+    if (!(regEx.exec(form["occupationOther"].value) || form.elements["occupation"].value !== "other")) {
         form['occupationOther'].className = "form-control invalid-field";
         formIsGood = false
     }
     var selectors = [form.elements['state'], form.elements['occupation']];
     for (i = 0; i < selectors.length; i++) {
-        if (selectors[i].value !== "") {
+        if (selectors[i].value === "") {
             selectors[i].className = "form-control invalid-field";
             formIsGood = false;
+        } else {
+            selectors[i].className = "form-control";
         }
     }
-    console.log("selectors" + formIsGood);
-    regEx = /^\\d{5}$/;
-    var zipCode = form.elements['zip'];
-    if (regEx.exec(zipCode.value)) {
-        zipCode.className = "form-control invalid-field";
+    // figures out if the zip code is ok
+    var zipRegEx = new RegExp("^\d{5}$");
+    if (zipRegEx.exec(form.elements['zip'].value)) {
+        form.elements["zip"].className = "form-control invalid-field";
         formIsGood = false;
+    } else {
+        form.elements["zip"].className = "form-control";
     }
-    console.log("zip" + formIsGood);
-    var birthday = new Date(form.elements["birthdate"].value).getUTCDate();
-    var current = new Date().getUTCDate();
-    if ((current.getYear() - birthday.getYear()) < 13) {
+    // figures out if the birthday is ok
+    if (form.elements["birthdate"].value === "") {
         formIsGood = false;
-        form.elements["birthday"].className = "form-control invalid-field";
-        document.getElementById("birthdateMessage").innerHTML = "Must be 13 or older to submit.";
-    } else if (current.getMonth() > birthday.getMonth()) {
-        formIsGood = false;
-        form.elements["birthday"].className = "form-control invalid-field";
-        document.getElementById("birthdateMessage").innerHTML = "Must be 13 or older to submit.";
-    } else if (current.getDay() > birthday.getDay()) {
-        formIsGood = false;
-        form.elements["birthday"].className = "form-control invalid-field";
-        document.getElementById("birthdateMessage").innerHTML = "Must be 13 or older to submit.";
+        form.elements["birthdate"].className = "form-control invalid-field";
     }
-    console.log("birthday" + formIsGood);
+    var birthday = new Date(form.elements["birthdate"].value);
+    var current = new Date();
+    if ((current.getFullYear() - birthday.getUTCFullYear()) < 13) {
+        formIsGood = false;
+        form.elements["birthdate"].className = "form-control invalid-field";
+        document.getElementById("birthdateMessage").innerHTML = "Must be 13 or older to submit.";
+        form.elements["birthdate"].className = "form-control invalid-field";
+    } else if (current.getFullYear() === birthday.getUTCFullYear() && 
+        current.getMonth() > birthday.getUTCMonth()) {
+            formIsGood = false;
+            form.elements["birthdate"].className = "form-control invalid-field";
+            document.getElementById("birthdateMessage").innerHTML = "Must be 13 or older to submit.";
+            form.elements["birthdate"].className = "form-control invalid-field";
+    } else if ((current.getFullYear() === birthday.getUTCFullYear()) && 
+        (current.getMonth() === birthday.getUTCMonth()) && 
+        (current.getDay() > birthday.getUTCDay())) {
+            formIsGood = false;
+            form.elements["birthdate"].className = "form-control invalid-field";
+            document.getElementById("birthdateMessage").innerHTML = "Must be 13 or older to submit.";
+            form.elements["birthdate"].className = "form-control invalid-field";
+
+    } else if (formIsGood) {
+        form.elements["birthdate"].className = "form-control";
+    }
     return formIsGood;
 }

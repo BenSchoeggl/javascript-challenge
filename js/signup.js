@@ -121,10 +121,6 @@ function validateBirthday() {
     }
 }
 
-function blackFunction() {
-    
-}
-
 function checkFieldWithRegExp(field, regEx) {
     if (!regEx.test(field.value)) {
         field.className = "form-control invalid-field";
@@ -134,5 +130,3 @@ function checkFieldWithRegExp(field, regEx) {
         return true;
     }
 }
-
-//Comment so I can commit localBranch

@@ -45,14 +45,14 @@ document.addEventListener('DOMContentLoaded', function() {
         evt.returnValue = formIsValid;
         return formIsValid;
     });
-    form.elements['firstName'].addEventListener('onchange', validateFirstName);
-    form.elements['lastName'].addEventListener('onchange', validateLastName);
-    form.elements['address1'].addEventListener('onchange', validateAddressLine1);
-    form.elements['city'].addEventListener('onchange', validateCity);
-    form.elements['state'].addEventListener('onchange', validateState);
-    form.elements['occupation'].addEventListener('onchange', validateOccupation);
-    form.elements['birthdate'].addEventListener('onchange', validateFirstName);
-    form.elements['zip'].addEventListener('onchange', validateZIPCode);
+    form.elements['firstName'].addEventListener('change', validateFirstName);
+    form.elements['lastName'].addEventListener('change', validateLastName);
+    form.elements['address1'].addEventListener('change', validateAddressLine1);
+    form.elements['city'].addEventListener('change', validateCity);
+    form.elements['state'].addEventListener('change', validateState);
+    form.elements['occupation'].addEventListener('change', validateOccupation);
+    form.elements['birthdate'].addEventListener('change', validateFirstName);
+    form.elements['zip'].addEventListener('change', validateZIPCode);
 });
 
 function validateFirstName() {

@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementsByName("occupationOther")[0].style.display = "block";
         } else {
             document.getElementsByName("occupationOther")[0].style.display = "none";
+            document.getElementsByName("occupationOther")[0].text = "";
         }
     });
     document.getElementById("cancelButton").addEventListener("click", function() {
@@ -100,36 +101,31 @@ function validateZIPCode() {
 function validateBirthday() {
     var birthday = moment(document.getElementById('signup').elements["birthdate"].value);
     var currentMoment = moment();
-    console.log(birthday);
-    console.log(currentMoment);
-    var birthdateField = document.getElementById("birthdate");
-    console.log(birthdateField);
     if (!birthday.isValid() || birthday.isAfter(currentMoment)) {
         console.log("invalid date");
-        birthdateField.className = "form-control invalid-field";
+        document.getElementById("birthdate").className = "form-control invalid-field";
         document.getElementById("birthdateMessage").innerHTML = "Please enter a valid Date";
         return false;
     } else {
         var earliestAllowedBirthday = moment().subtract(13, 'years');
         if (birthday.isAfter(earliestAllowedBirthday)) {
-            birthdateField.className = "form-control invalid-field";
+            document.getElementById("birthdate").className = "form-control invalid-field";
             document.getElementById("birthdateMessage").innerHTML = "Must be 13 or older to submit.";
             birthdateField.className = "form-control invalid-field";
             return false;
         } else {
-            birthdateField.className = "form-control";
+            document.getElementById("birthdate").className = "form-control";
+            document.getElementById("birthdateMessage").innerHTML = "";
             return true;
         }
     }
 }
 
 function checkFieldWithRegExp(field, regEx) {
-    var formIsGood = true;
     if (!regEx.test(field.value)) {
         field.className = "form-control invalid-field";
-        formIsGood = false;
+        return false;
     } else {
         field.className = "form-control";
-    }
-    return formIsGood;
+        return true;
 }

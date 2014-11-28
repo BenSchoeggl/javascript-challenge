@@ -3,6 +3,8 @@
     This script will load the state select list and validate the form before submission
 */
 
+// updated 11/28/14 3:50PM
+
 "use strict";
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById("signup");

@@ -97,7 +97,7 @@ function validateOccupation() {
 
 function validateZIPCode() {
     console.log("validateZIP ran");
-    return checkFieldWithRegExp(document.getElementById("signup").elements['zip'], new RegExp("^\d{5}$"));
+    return checkFieldWithRegExp(document.getElementById("signup").elements['zip'], new RegExp('^\\d{5}$'));
 }
 
 function validateBirthday() {

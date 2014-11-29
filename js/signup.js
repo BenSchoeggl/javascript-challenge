@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
     form.elements['city'].addEventListener('change', checkFieldWithRegExp(form.elements['city'],
         new RegExp("^[a-zA-Z]")));
     form.elements['state'].addEventListener('change', checkFieldWithRegExp(form.elements['state'],
-        new RegExp("^[a-zA-Z0-9]")));
-    form.elements['occupation'].addEventListener('change', validateOccupation());
+        new RegExp("^[a-zA-Z]")));
+    form.elements['occupation'].addEventListener('change', validateOccupation);
     form.elements['occupationOther'].addEventListener('change', validateOccupationOther);
     form.elements['birthdate'].addEventListener('change', validateBirthday);
     form.elements['zip'].addEventListener('change', checkFieldWithRegExp(form.elements['address1'],

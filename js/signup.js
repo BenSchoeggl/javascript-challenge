@@ -18,10 +18,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var occupationSelector = document.getElementById("occupation");
     occupationSelector.addEventListener("change", function() {
         if (occupationSelector.value === "other") {
-            document.getElementsByName("occupationOther")[0].style.display = "block";
+            var occupationOther = document.getElementsByName("occupationOther")[0];
+            occupationOther.style.display = "block";
+            occupationOther.className = "form-control invalid-field";
         } else {
             document.getElementsByName("occupationOther")[0].style.display = "none";
-            document.getElementsByName("occupationOther")[0].text = "";
+            document.getElementsByName("occupationOther")[0].value = "";
         }
     });
     document.getElementById("cancelButton").addEventListener("click", function() {
@@ -54,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form.elements['city'].addEventListener('change', validateCity);
     form.elements['state'].addEventListener('change', validateState);
     form.elements['occupation'].addEventListener('change', validateOccupation);
+    form.elements['occupationOther'].addEventListener('change', validateOccupationOther);
     form.elements['birthdate'].addEventListener('change', validateFirstName);
     form.elements['zip'].addEventListener('change', validateZIPCode);
 });
@@ -85,14 +88,27 @@ function validateState() {
 
 function validateOccupation() {
     console.log("validateOccupation ran");
+    return document.getElementById("signup").elements['occupation'].value !== "";
+    //var occupationField = document.getElementById("signup").elements['occupation'];
+    //var regExForOccupation = new RegExp(".");
+    //var formIsGood = checkFieldWithRegExp(occupationField, regExForOccupation);
+    //if (formIsGood && occupationField.value == 'other') {
+    //    formIsGood = formIsGood && document.getElementById('signup').elements['occupationOther'] !== ""
+    //}
+    //return formIsGood;
+}
+
+function validateOccupationOther() {
+    console.log('validateOccupationOther ran');
     var occupationField = document.getElementById("signup").elements['occupation'];
-    var regExForOccupation = new RegExp(".");
-    var formIsGood = checkFieldWithRegExp(occupationField, regExForOccupation);
-    if (formIsGood && occupationField.value == 'other') {
-        formIsGood = formIsGood && checkFieldWithRegExp(document.getElementById('signup').elements['occupationOther'],
-            regExForOccupation);
+    var occupationOtherField = document.getElementById("signup").elements['occupationOther'];
+    if (occupationField.value == "other" && occupationOtherField.value == "") {
+        occupationOtherField.className = "form-control invalid-field";
+        return false;
+    } else {
+        occupationOtherField.className = "form-control";
+        return true;
     }
-    return formIsGood;
 }
 
 function validateZIPCode() {

@@ -20,10 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (occupationSelector.value === "other") {
             var occupationOther = document.getElementsByName("occupationOther")[0];
             occupationOther.style.display = "block";
-            occupationOther.className = "form-control invalid-field";
+            occupationOther.className = "form-control";
         } else {
             document.getElementsByName("occupationOther")[0].style.display = "none";
-            document.getElementsByName("occupationOther")[0].value = "";
         }
     });
     document.getElementById("cancelButton").addEventListener("click", function() {
@@ -35,71 +34,52 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     form.addEventListener('submit', function(evt) {
-        var formIsValid = validateFirstName();
-        formIsValid = validateLastName() && formIsValid;
-        formIsValid = validateAddressLine1() && formIsValid;
-        formIsValid = validateCity() && formIsValid;
+        var formIsValid = checkFieldWithRegExp(form.elements['firstName'], new RegExp("^[a-zA-Z]")) && formIsValid;
+        formIsValid = checkFieldWithRegExp(form.elements['lastName'], new RegExp("^[a-zA-Z]")) && formIsValid;
+        formIsValid = checkFieldWithRegExp(form.elements['address1'], new RegExp("^[a-zA-Z0-9]")) && formIsValid;
+        formIsValid = checkFieldWithRegExp(form.elements['city'], new RegExp("^[a-zA-Z]")) && formIsValid;
         formIsValid = validateBirthday() && formIsValid;
-        formIsValid = validateZIPCode() && formIsValid;
-        formIsValid = validateState() && formIsValid;
+        formIsValid = checkFieldWithRegExp(form.elements['state'], new RegExp("^[a-zA-Z]")) && formIsValid;
+        formIsValid = checkFieldWithRegExp(form.elements['zip'], new RegExp("^\\d{5}$")) && formIsValid;
         formIsValid = validateOccupation() && formIsValid;
-        console.log(formIsValid);
         if (!formIsValid && evt.preventDefault) {
             evt.preventDefault();
         }
         evt.returnValue = formIsValid;
         return formIsValid;
     });
-    form.elements['firstName'].addEventListener('change', validateFirstName);
-    form.elements['lastName'].addEventListener('change', validateLastName);
-    form.elements['address1'].addEventListener('change', validateAddressLine1);
-    form.elements['city'].addEventListener('change', validateCity);
-    form.elements['state'].addEventListener('change', validateState);
-    form.elements['occupation'].addEventListener('change', validateOccupation);
+    form.elements['firstName'].addEventListener('change', checkFieldWithRegExp(form.elements['firstName'],
+        new RegExp("^[a-zA-Z]")));
+    form.elements['lastName'].addEventListener('change', checkFieldWithRegExp(form.elements['lastName'],
+        new RegExp("^[a-zA-Z]")));
+    form.elements['address1'].addEventListener('change', checkFieldWithRegExp(form.elements['address1'],
+        new RegExp("^[a-zA-Z0-9]")));
+    form.elements['city'].addEventListener('change', checkFieldWithRegExp(form.elements['city'],
+        new RegExp("^[a-zA-Z]")));
+    form.elements['state'].addEventListener('change', checkFieldWithRegExp(form.elements['state'],
+        new RegExp("^[a-zA-Z0-9]")));
+    form.elements['occupation'].addEventListener('change', validateOccupation());
     form.elements['occupationOther'].addEventListener('change', validateOccupationOther);
-    form.elements['birthdate'].addEventListener('change', validateFirstName);
-    form.elements['zip'].addEventListener('change', validateZIPCode);
+    form.elements['birthdate'].addEventListener('change', validateBirthday);
+    form.elements['zip'].addEventListener('change', checkFieldWithRegExp(form.elements['address1'],
+        new RegExp("^\\d{5}$")));
+    for (var i = 0; i < form.elements.length; i++) {
+        form.elements[i].className = "form-control";
+    }
 });
 
-function validateFirstName() {
-    console.log("validateFirsttName ran");
-    return checkFieldWithRegExp(document.getElementById("signup").elements['firstName'], new RegExp("^[a-zA-Z]"));
-}
-
-function validateLastName() {
-    console.log("validateLastName ran");
-    return checkFieldWithRegExp(document.getElementById("signup").elements['lastName'], new RegExp("^[a-zA-Z]"));
-}
-
-function validateAddressLine1() {
-    console.log("validateAddress ran");
-    return checkFieldWithRegExp(document.getElementById("signup").elements['address1'], new RegExp("^[a-zA-Z0-9]"));
-}
-
-function validateCity() {
-    console.log("validateCity ran");
-    return checkFieldWithRegExp(document.getElementById("signup").elements['city'], new RegExp("^[a-zA-Z]"));
-}
-
-function validateState() {
-    console.log("validateState ran");
-    return checkFieldWithRegExp(document.getElementById("signup").elements['state'], new RegExp("."));
-}
-
 function validateOccupation() {
-    console.log("validateOccupation ran");
-    return document.getElementById("signup").elements['occupation'].value !== "";
-    //var occupationField = document.getElementById("signup").elements['occupation'];
-    //var regExForOccupation = new RegExp(".");
-    //var formIsGood = checkFieldWithRegExp(occupationField, regExForOccupation);
-    //if (formIsGood && occupationField.value == 'other') {
-    //    formIsGood = formIsGood && document.getElementById('signup').elements['occupationOther'] !== ""
-    //}
-    //return formIsGood;
+    var occupationField = document.getElementById("signup").elements['occupation'];
+    if (occupationField.value == '') {
+        occupationField.className = "form-control invalid-field";
+        return false;
+    } else {
+        occupationField.className = "form-control";
+        return true;
+    }
 }
 
 function validateOccupationOther() {
-    console.log('validateOccupationOther ran');
     var occupationField = document.getElementById("signup").elements['occupation'];
     var occupationOtherField = document.getElementById("signup").elements['occupationOther'];
     if (occupationField.value == "other" && occupationOtherField.value == "") {
@@ -111,16 +91,10 @@ function validateOccupationOther() {
     }
 }
 
-function validateZIPCode() {
-    console.log("validateZIP ran");
-    return checkFieldWithRegExp(document.getElementById("signup").elements['zip'], new RegExp('^\\d{5}$'));
-}
-
 function validateBirthday() {
     var birthday = moment(document.getElementById('signup').elements["birthdate"].value);
     var currentMoment = moment();
     if (!birthday.isValid() || birthday.isAfter(currentMoment)) {
-        console.log("invalid date");
         document.getElementById("birthdate").className = "form-control invalid-field";
         document.getElementById("birthdateMessage").innerHTML = "Please enter a valid Date";
         return false;
